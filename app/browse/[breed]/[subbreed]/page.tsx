@@ -10,7 +10,7 @@ interface BreedList {
     [breed: string]: string[];
 }
 
-const SubbreedPage = ({ params }: { params: { breed: string; subbreed: string } }) => {
+const SubBreedPage = ({ params }: { params: { breed: string; subbreed: string } }) => {
     const router = useRouter();
     const [breedData, setBreedData] = useState<BreedList>({});
     const [selectedBreed, setSelectedBreed] = useState<string>(`${params.breed}/${params.subbreed}`);
@@ -83,4 +83,4 @@ const SubbreedPage = ({ params }: { params: { breed: string; subbreed: string } 
     );
 };
 
-export default SubbreedPage;
+export default SubBreedPage;
