@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
+export const dynamic = 'force-dynamic';
+
 interface Dog {
     breed: string;
     image_url: string;
