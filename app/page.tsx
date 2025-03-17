@@ -2,6 +2,8 @@
 
 import FetchDog from '@/components/FetchDog';
 
+export const dynamic = 'force-dynamic';
+
 const Home = () => {
     return (
         <main className="p-4 max-w-4xl mx-auto">
