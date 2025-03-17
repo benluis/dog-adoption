@@ -1,3 +1,5 @@
+// app/browse/[breed]/[subbreed]/page.tsx
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -8,12 +10,7 @@ interface BreedList {
     [breed: string]: string[];
 }
 
-interface PageParams {
-    breed: string;
-    subbreed: string;
-}
-
-const SubBreedPage = ({ params }: { params: PageParams }) => {
+const SubBreedPage = ({ params }: { params: { breed: string; subbreed: string } }) => {
     const router = useRouter();
     const [breedData, setBreedData] = useState<BreedList>({});
     const [selectedBreed, setSelectedBreed] = useState<string>(`${params.breed}/${params.subbreed}`);
@@ -87,13 +84,3 @@ const SubBreedPage = ({ params }: { params: PageParams }) => {
 };
 
 export default SubBreedPage;
-
-export const generateMetadata = ({ params }: { params: PageParams }) => {
-    return {
-        title: `${params.breed} ${params.subbreed} Dogs`,
-    };
-};
-
-export const generateStaticParams = async () => {
-    return [];
-};
