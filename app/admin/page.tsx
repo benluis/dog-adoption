@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,9 +15,15 @@ interface Dog {
 export default function Admin() {
     const [dogs, setDogs] = useState<Dog[]>([]);
     const [newDog, setNewDog] = useState<Dog>({ breed: '', image_url: '', status: 'available' });
-    const supabase = createClient();
+    const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
+
+    useEffect(() => {
+        setSupabase(createClient());
+    }, []);
 
     const fetchDogs = async () => {
+        if (!supabase) return;
+
         const { data } = await supabase
             .from('dogs')
             .select('*')
@@ -26,12 +33,14 @@ export default function Admin() {
     };
 
     useEffect(() => {
-        fetchDogs();
-    }, []);
+        if (supabase) {
+            fetchDogs();
+        }
+    }, [supabase]);
 
     const addDog = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (newDog.breed == '') {
+        if (!supabase || newDog.breed == '') {
             return;
         }
 
@@ -41,11 +50,15 @@ export default function Admin() {
     };
 
     const deleteDog = async (image_url: string) => {
+        if (!supabase) return;
+
         await supabase.from('dogs').delete().eq('image_url', image_url);
         fetchDogs();
     };
 
     const markAdopted = async (image_url: string) => {
+        if (!supabase) return;
+
         const { error } = await supabase
             .from('dogs')
             .update({ status: 'adopted' })
