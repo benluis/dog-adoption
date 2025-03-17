@@ -17,7 +17,7 @@ export function createClient() {
 const FetchDog = ({ breed = '', subbreed = '', limit = 12 }) => {
     const [dogImages, setDogImages] = useState<string[]>([]);
     const [dogStatuses, setDogStatuses] = useState<DogStatusMap>({});
-    const supabase = createClient();
+    const [supabase, setSupabase] = useState(null);
 
     let mainBreed = breed;
     let subBreed = subbreed;
@@ -27,6 +27,10 @@ const FetchDog = ({ breed = '', subbreed = '', limit = 12 }) => {
         mainBreed = parts[0];
         subBreed = parts[1];
     }
+
+    useEffect(() => {
+        setSupabase(createClient());
+    }, []);
 
     useEffect(() => {
         async function fetchDogImages() {
@@ -45,10 +49,14 @@ const FetchDog = ({ breed = '', subbreed = '', limit = 12 }) => {
 
                 if (Array.isArray(data.message)) {
                     setDogImages(data.message);
-                    checkDogStatuses(data.message);
+                    if (supabase) {
+                        checkDogStatuses(data.message);
+                    }
                 } else if (typeof data.message == 'string') {
                     setDogImages([data.message]);
-                    checkDogStatuses([data.message]);
+                    if (supabase) {
+                        checkDogStatuses([data.message]);
+                    }
                 } else {
                     setDogImages([]);
                 }
@@ -60,10 +68,10 @@ const FetchDog = ({ breed = '', subbreed = '', limit = 12 }) => {
         }
 
         fetchDogImages();
-    }, [mainBreed, subBreed, limit]);
+    }, [mainBreed, subBreed, limit, supabase]);
 
     async function checkDogStatuses(images: string[]) {
-        if (!images || images.length == 0) {
+        if (!images || images.length == 0 || !supabase) {
             return;
         }
 
@@ -90,6 +98,8 @@ const FetchDog = ({ breed = '', subbreed = '', limit = 12 }) => {
     }
 
     async function addNewDogToSupabase(image: string) {
+        if (!supabase) return;
+
         let detectedBreed = 'Unknown';
         const urlParts = image.match(/breeds\/([^\/]+)(?:\/([^\/]+))?/);
 
@@ -123,6 +133,8 @@ const FetchDog = ({ breed = '', subbreed = '', limit = 12 }) => {
     }
 
     async function adoptDog(imageUrl: string) {
+        if (!supabase) return;
+
         const { data } = await supabase
             .from('dogs')
             .select('status')
