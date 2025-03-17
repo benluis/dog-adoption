@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 interface DogStatusMap {
     [imageUrl: string]: string;
@@ -17,7 +18,7 @@ export function createClient() {
 const FetchDog = ({ breed = '', subbreed = '', limit = 12 }) => {
     const [dogImages, setDogImages] = useState<string[]>([]);
     const [dogStatuses, setDogStatuses] = useState<DogStatusMap>({});
-    const [supabase, setSupabase] = useState(null);
+    const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
 
     let mainBreed = breed;
     let subBreed = subbreed;
