@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import FetchDog from '@/components/FetchDog';
 
+export const dynamic = 'force-dynamic';
+
 interface BreedList {
     [breed: string]: string[];
 }
