@@ -1,7 +1,5 @@
 // app/browse/[breed]/[subbreed]/page.tsx
 
-'use client';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FetchDog from '@/components/FetchDog';
