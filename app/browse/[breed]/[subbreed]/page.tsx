@@ -3,17 +3,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import FetchDog from '@/components/FetchDog';
 
 interface BreedList {
     [breed: string]: string[];
 }
 
-const SubBreedPage = ({ params }: { params: { breed: string; subbreed: string } }) => {
+const SubBreedPage = () => {
+    const params = useParams();
+    const breed = params.breed as string;
+    const subbreed = params.subbreed as string;
+
     const router = useRouter();
     const [breedData, setBreedData] = useState<BreedList>({});
-    const [selectedBreed, setSelectedBreed] = useState<string>(`${params.breed}/${params.subbreed}`);
+    const [selectedBreed, setSelectedBreed] = useState<string>(`${breed}/${subbreed}`);
 
     useEffect(() => {
         async function fetchBreeds() {
@@ -26,7 +30,7 @@ const SubBreedPage = ({ params }: { params: { breed: string; subbreed: string } 
         }
 
         fetchBreeds();
-    }, []);
+    }, [breed, subbreed]);
 
     const handleBreedChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const breed = e.target.value;
@@ -44,7 +48,7 @@ const SubBreedPage = ({ params }: { params: { breed: string; subbreed: string } 
 
     return (
         <main className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold mb-6">{params.breed} {params.subbreed} dogs</h1>
+            <h1 className="text-4xl font-bold mb-6">{breed} {subbreed} dogs</h1>
 
             <div className="mb-8">
                 <h2 className="block mb-2 text-lg font-medium">
@@ -78,7 +82,7 @@ const SubBreedPage = ({ params }: { params: { breed: string; subbreed: string } 
                 </select>
             </div>
 
-            <FetchDog breed={params.breed} subbreed={params.subbreed} limit={24} />
+            <FetchDog breed={breed} subbreed={subbreed} limit={24} />
         </main>
     );
 };
